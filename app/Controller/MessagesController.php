@@ -18,12 +18,10 @@ class MessagesController extends AppController {
 	public $components = array('Paginator', 'Session', 'Flash');
 
 	public function isAuthorized($user) {
-		// All registered users can add messages
 		if ($this->action === 'add') {
 			return true;
 		}
 
-		// The owner of a message can edit and delete it
 		if (in_array($this->action, array('edit', 'delete'))) {
 			$messageId = (int) $this->request->params['pass'][0];
 			if ($this->Message->isOwnedBy($messageId, $user['id'])) {

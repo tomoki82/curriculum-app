@@ -18,12 +18,11 @@ class UsersController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('add');
+		$this->Auth->allow('add', 'thankyou');
 	}
 
 	public function login() {
 		if ($this->request->is('post')) {
-			debug($this->request->data);
 			if ($this->Auth->login()) {
 				$this->User->id = $this->Auth->user('id');
 				$this->User->saveField('last_login_time', date('Y-m-d H:i:s'));
@@ -71,14 +70,16 @@ class UsersController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->User->create();
-			$this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
 			if ($this->User->save($this->request->data)) {
-				$this->Flash->success(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(array('controller' => 'users', 'action' => 'thankyou'));
 			} else {
 				$this->Flash->error(__('The user could not be saved. Please, try again.'));
 			}
 		}
+	}
+
+	public function thankyou() {
+		// thankyou.ctpを表示する
 	}
 
 /**

@@ -17,9 +17,13 @@
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 ?>
+<?php echo $this->Html->script('validation'); ?>
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<?php echo $this->Html->charset(); ?>
 	<title>
 		<?php echo $cakeDescription ?>:
@@ -37,13 +41,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 <body>
 	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'https://cakephp.org'); ?></h1>
-			<div class="main-menu">
-    		<?php if ($this->Session->read('Auth.User')): ?>
-        		<span><?php echo h($this->Session->read('Auth.User.username')); ?></span>
-        		<?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?>
-    		<?php endif; ?>
+	<div id="header">
+		<div class="main-menu">
+			<?php if ($this->Session->read('Auth.User')): ?>
+				<?php echo $this->Html->link(
+					h($this->Session->read('Auth.User.name')),
+					['controller' => 'users', 'action' => 'view', $this->Session->read('Auth.User.id')]
+				); ?>
+				<?php echo $this->Html->link('Logout', ['controller' => 'users', 'action' => 'logout']); ?>
+			<?php endif; ?>
 		</div>
 		<div id="content">
 

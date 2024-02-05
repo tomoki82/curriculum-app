@@ -7,8 +7,12 @@
 		echo $this->Form->input('name');
 		echo $this->Form->input('email');
 		echo $this->Form->input('password');
-		echo $this->Form->input('birthdate');
-		echo $this->Form->input('gender');
+		echo $this->Form->input('birthdate', ['type' => 'text', 'id' => 'birthdate', 'label' => 'Birthdate']);
+		echo $this->Form->input('gender', [
+			'type' => 'select',
+			'options' => [1 => 'Female', 2 => 'Male', 3 => 'Other'],
+			'label' => 'Gender'
+		]);
 		echo $this->Form->input('hobby');
 		echo $this->Form->input('profile_img');
 	?>
@@ -27,3 +31,15 @@
 		<li><?php echo $this->Html->link(__('New Message'), array('controller' => 'messages', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+
+<script>
+$(function() {
+    // 生年月日フィールドにDatePickerを適用
+    $('#birthdate').datepicker({
+        dateFormat: 'yy-mm-dd', // 日付の形式
+        changeYear: true, // 年を変更できるようにする
+        changeMonth: true, // 月を変更できるようにする
+        yearRange: "-100:+0", // 年の範囲
+    });
+});
+</script>
