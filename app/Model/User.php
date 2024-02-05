@@ -45,6 +45,7 @@ class User extends AppModel {
 		'password' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
+				'on' => 'create',
 			),
 		),
 		'birthdate' => array(
