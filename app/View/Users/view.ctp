@@ -26,14 +26,16 @@
 			<?php echo h($user['User']['profile_img']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Created'); ?></dt>
+		<dt><?php echo __('Joined'); ?></dt>
 		<dd>
-			<?php echo h($user['User']['created']); ?>
+			<?php echo h(date('F j, Y g a', strtotime($user['User']['created'])));  ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
+		<dt><?php echo __('LastLogin'); ?></dt>
 		<dd>
-			<?php echo h($user['User']['modified']); ?>
+			<?php 
+			echo h(date('F j, Y g a', strtotime($user['User']['last_login_time']))); 
+			?>
 			&nbsp;
 		</dd>
 	</dl>
