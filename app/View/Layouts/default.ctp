@@ -39,6 +39,11 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($cakeDescription, 'https://cakephp.org'); ?></h1>
+			<div class="main-menu">
+    		<?php if ($this->Session->read('Auth.User')): ?>
+        		<span><?php echo h($this->Session->read('Auth.User.username')); ?></span>
+        		<?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?>
+    		<?php endif; ?>
 		</div>
 		<div id="content">
 
@@ -59,5 +64,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
+</div>
+
 </body>
 </html>
