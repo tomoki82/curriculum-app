@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 /**
  * User Model
  *
@@ -24,41 +25,31 @@ class User extends AppModel {
 		'name' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'message' => 'Name is required',
+			),
+			'length' => array(
+				'rule' => array('lengthBetween', 5, 20),
+				'message' => 'Name must be between 5 and 20 characters long'
 			),
 		),
 		'email' => array(
 			'email' => array(
 				'rule' => array('email'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'message' => 'Please provide a valid email address.',
+			),
+			'isUnique' => array(
+				'rule' => 'isUnique',
+				'message' => 'This email is already used.',
 			),
 		),
 		'password' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 		'birthdate' => array(
 			'date' => array(
 				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 	);
@@ -98,5 +89,13 @@ class User extends AppModel {
 			'counterQuery' => ''
 		)
 	);
-
+    public function beforeSave($options = array()) {
+        if (isset($this->data[$this->alias]['password'])) {
+            $passwordHasher = new BlowfishPasswordHasher();
+            $this->data[$this->alias]['password'] = $passwordHasher->hash(
+                $this->data[$this->alias]['password']
+            );
+        }
+        return true;
+    }
 }
