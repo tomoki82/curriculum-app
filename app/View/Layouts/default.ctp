@@ -24,6 +24,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<?php echo $this->Html->script('message_delete'); ?>
+	<?php echo $this->Html->script('load_more_messages'); ?>
 	<?php echo $this->Html->charset(); ?>
 	<title>
 		<?php echo $cakeDescription ?>:
@@ -40,7 +42,6 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	?>
 </head>
 <body>
-	<div id="container">
 	<div id="header">
 		<div class="main-menu">
 			<?php if ($this->Session->read('Auth.User')): ?>
@@ -57,19 +58,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 			<?php echo $this->fetch('content'); ?>
 		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'https://cakephp.org/',
-					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
-				);
-			?>
-			<p>
-				<?php echo $cakeVersion; ?>
-			</p>
-		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
 </div>
 
 </body>

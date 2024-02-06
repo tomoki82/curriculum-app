@@ -24,35 +24,27 @@
 						<span class="message-text"><?php echo h($message['Message']['content']); ?></span>
 						<div class="created-date"><?php echo date('Y/m/d H:i', strtotime($message['Message']['created'])); ?></div>
 					</div>
+					<div class="message-actions">
+						<!-- TODO: conversation_idもデータとして渡すようにする -->
+                    <?php echo $this->Html->link(__('Delete'), '#', array(
+							'class' => 'delete-message',
+							'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
+							'data-id' => $message['Message']['id'],
+						));
+					?>
+                	</div>
 				</div>
 			</td>
 		</tr>
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Message'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Conversations'), array('controller' => 'conversations', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Conversation'), array('controller' => 'conversations', 'action' => 'add')); ?> </li>
-	</ul>
+	<?php if ($this->Paginator->hasNext()) {
+		echo $this->Paginator->next(__('Show More'), array('class' => 'load-more'));
+	} else {
+		echo $this->Paginator->next(__('') . '', array(), '', array('style' => 'display: none;'));
+	} ?>
+
 </div>
 
 <style>
@@ -69,7 +61,7 @@
 
 .message-content {
     display: flex;
-    border-right: 2px solid #ccc;
+    /* border-right: 2px solid #ccc; */
 }
 
 .user-image-placeholder {
@@ -77,12 +69,14 @@
     height: 50px;
     background-color: #f0f0f0;
     display: inline-block;
+	border-bottom: 1px solid #ccc;
 }
 
 .message-details {
     display: flex;
     flex-direction: column;
 	flex-grow: 1;
+	border-left: 1px solid #ccc;
 }
 
 .message-text {
@@ -95,5 +89,28 @@
     font-size: 0.8em;
     text-align: right;
 	border-top: 1px solid #ccc;
+}
+
+.message-actions {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px;
+	border-left: 1px solid #ccc;
+	background-color: #ccc;
+}
+
+.load-more {
+	display: block;
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	font-size: 0.8em;
+	color: #000;
+	background-color: #ccc;
+	padding: 5px;
+	border-radius: 5px;
+	text-decoration: none;
 }
 </style>

@@ -123,8 +123,7 @@ div.form,
 div.index,
 div.view {
 	float:right;
-	width:76%;
-	border-left:1px solid #666;
+	width: auto;
 	padding:10px 2%;
 }
 div.actions {
@@ -196,8 +195,8 @@ table td.actions a {
 
 /** Paging **/
 .paging {
-	background:#fff;
-	color: #ccc;
+	background: #ccc;
+	color: #F0F0F0;
 	margin-top: 1em;
 	clear:both;
 }
@@ -206,7 +205,6 @@ table td.actions a {
 .paging a {
 	text-decoration: none;
 	padding: 5px 8px;
-	display: inline-block
 }
 .paging > span {
 	display: inline-block;

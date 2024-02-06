@@ -8,6 +8,16 @@ App::uses('AppModel', 'Model');
  */
 class Message extends AppModel {
 
+	public function isOwnedBy($messageId, $userId) {
+		$count = $this->find('count', array(
+			'conditions' => array(
+				'Message.id' => $messageId,
+				'Message.user_id' => $userId
+			),
+		));
+		return $count > 0;
+}
+
 /**
  * Display field
  *
