@@ -1,38 +1,34 @@
 <div class="messages index">
-	<h2><?php echo __('Messages'); ?></h2>
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<h2><?php echo __('Message List'); ?></h2>
+		<div>
+			<?php echo $this->Html->link(__('New Message'), array('action' => 'add'), array('class' => 'button new-message')); ?>
+		</div>
+	</div>
 	<table cellpadding="0" cellspacing="0">
-	<thead>
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('conversation_id'); ?></th>
+		<thead>
+		<tr>
 			<th><?php echo $this->Paginator->sort('content'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($messages as $message): ?>
-	<tr>
-		<td><?php echo h($message['Message']['id']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($message['User']['name'], array('controller' => 'users', 'action' => 'view', $message['User']['id'])); ?>
-		</td>
-		<td>
-			<?php echo $this->Html->link($message['Conversation']['id'], array('controller' => 'conversations', 'action' => 'view', $message['Conversation']['id'])); ?>
-		</td>
-		<td><?php echo h($message['Message']['content']); ?>&nbsp;</td>
-		<td><?php echo h($message['Message']['created']); ?>&nbsp;</td>
-		<td><?php echo h($message['Message']['modified']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $message['Message']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $message['Message']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $message['Message']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $message['Message']['id']))); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</tbody>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach ($messages as $message): ?>
+		<tr>
+			<td colspan="2" class="message-table">
+				<div class="message-row">
+					<div class="message-content">
+						<div class="user-image-placeholder"></div>
+					</div>
+					<div class="message-details">
+						<span class="message-text"><?php echo h($message['Message']['content']); ?></span>
+						<div class="created-date"><?php echo date('Y/m/d H:i', strtotime($message['Message']['created'])); ?></div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+		</tbody>
 	</table>
 	<p>
 	<?php
@@ -58,3 +54,46 @@
 		<li><?php echo $this->Html->link(__('New Conversation'), array('controller' => 'conversations', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+
+<style>
+
+.message-table {
+	border: none;
+}
+.message-row {
+    display: flex;
+    align-items: flex-start;
+    border: 2px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.message-content {
+    display: flex;
+    border-right: 2px solid #ccc;
+}
+
+.user-image-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #f0f0f0;
+    display: inline-block;
+}
+
+.message-details {
+    display: flex;
+    flex-direction: column;
+	flex-grow: 1;
+}
+
+.message-text {
+	margin-left: 5px;
+    margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.created-date {
+    font-size: 0.8em;
+    text-align: right;
+	border-top: 1px solid #ccc;
+}
+</style>

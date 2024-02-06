@@ -9,9 +9,11 @@
 		echo $this->Form->input('password', ['type' => 'password', 'value' => '']);
 		echo $this->Form->input('birthdate', ['type' => 'text', 'id' => 'birthdate', 'label' => 'Birthdate']);
 		echo $this->Form->input('gender', [
-			'type' => 'select',
+			'type' => 'radio',
+			'multiple' => 'checkbox',
 			'options' => [1 => 'Female', 2 => 'Male', 3 => 'Other'],
-			'label' => 'Gender'
+			'label' => 'Gender',
+			'class' => 'gender-checkboxes'
 		]);
 		echo $this->Form->input('hobby');
 		echo $this->Form->input('profile_img');

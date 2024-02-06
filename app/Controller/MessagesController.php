@@ -9,6 +9,7 @@ App::uses('AppController', 'Controller');
  * @property FlashComponent $Flash
  */
 class MessagesController extends AppController {
+	public $uses = array('Message', 'Conversation');
 
 /**
  * Components
@@ -64,18 +65,37 @@ class MessagesController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
+			$currentUserId = $this->Auth->user('id');
+    		$this->request->data['Message']['user_id'] = $currentUserId;
+			if (empty($this->request->data['conversation_id'])) {
+				$conversationData = array(
+					'Conversation' => array(
+						'user_id' => $currentUserId,
+					)
+				);
+				$this->Conversation->create();
+				if ($this->Conversation->save($conversationData)) {
+					$conversationId = $this->Conversation->id;
+				}
+			} else {
+				$conversationId = $this->request->data['conversation_id'];
+			}
+			$this->request->data['Message']['conversation_id'] = $conversationId;
+
 			$this->Message->create();
 			if ($this->Message->save($this->request->data)) {
 				$this->Flash->success(__('The message has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Flash->error(__('The message could not be saved. Please, try again.'));
 			}
 		}
+
 		$users = $this->Message->User->find('list');
 		$conversations = $this->Message->Conversation->find('list');
 		$this->set(compact('users', 'conversations'));
 	}
+
 
 /**
  * edit method

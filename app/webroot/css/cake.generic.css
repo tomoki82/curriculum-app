@@ -356,6 +356,9 @@ input[type=radio] {
 	margin: 0 0 6px 20px;
 	line-height: 26px;
 }
+gender-checkboxes div {
+	display: inline!important;
+}
 input[type=submit] {
 	display: inline;
 	font-size: 110%;
@@ -560,6 +563,19 @@ input[type=submit]:active,
 	box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 	border-color: #aaa;
 	text-decoration: none;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #acacac;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.new-message {
+	color: black!important;
+    font-weight: bold;
 }
 
 /** Related **/
