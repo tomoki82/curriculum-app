@@ -2,7 +2,8 @@ $(document).ready(function() {
     $('.delete-message').click(function(e) {
         e.preventDefault();
         var url = $(this).data('url');
-        var messageId = $(this).data('id');
+        var messageId = $(this).data('id')
+        var conversationId = $(this).data('conversation-id');
         var rowToDelete = $(this).closest('tr');
         console.log($(this).data());
 
@@ -12,6 +13,7 @@ $(document).ready(function() {
                 type: 'POST',
                 data: {
                     id: messageId,
+                    conversation_id: conversationId,
                     _method: 'DELETE'
                 },
                 success: function(result) {
