@@ -35,10 +35,18 @@ class ConversationsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->set('currentUser', $this->Auth->user());
 		if (!$this->Conversation->exists($id)) {
 			throw new NotFoundException(__('Invalid conversation'));
 		}
-		$options = array('conditions' => array('Conversation.' . $this->Conversation->primaryKey => $id));
+		$options = array(
+			'conditions' => array('Conversation.' . $this->Conversation->primaryKey => $id),
+			'contain' => array(
+				'Message' => array(
+					'order' => array('Message.created' => 'desc')
+				)
+			)
+		);
 		$this->set('conversation', $this->Conversation->find('first', $options));
 	}
 

@@ -1,54 +1,14 @@
-<div class="conversations view">
-<h2><?php echo __('Conversation'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($conversation['Conversation']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($conversation['User']['name'], array('controller' => 'users', 'action' => 'view', $conversation['User']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($conversation['Conversation']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($conversation['Conversation']['modified']); ?>
-			&nbsp;
-		</dd>
-	</dl>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Conversation'), array('action' => 'edit', $conversation['Conversation']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Conversation'), array('action' => 'delete', $conversation['Conversation']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $conversation['Conversation']['id']))); ?> </li>
-		<li><?php echo $this->Html->link(__('List Conversations'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Conversation'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Messages'), array('controller' => 'messages', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Message'), array('controller' => 'messages', 'action' => 'add')); ?> </li>
-	</ul>
+<div class="conversations view" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px;">
+<h2><?php echo __('Message Detail'); ?></h2>
+	<div id="replyBox">
+    	<textarea id="messageContent" placeholder="Message"></textarea>
+    	<button id="sendMessage">Send</button>
+	</div>
 </div>
 <div class="related">
 	<h3><?php echo __('Related Messages'); ?></h3>
 	<?php if (!empty($conversation['Message'])): ?>
 	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('User Id'); ?></th>
-		<th><?php echo __('Conversation Id'); ?></th>
-		<th><?php echo __('Content'); ?></th>
-		<th><?php echo __('Created'); ?></th>
-		<th><?php echo __('Modified'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
 	<?php foreach ($conversation['Message'] as $message): ?>
 		<tr>
 			<td><?php echo $message['id']; ?></td>
@@ -57,19 +17,53 @@
 			<td><?php echo $message['content']; ?></td>
 			<td><?php echo $message['created']; ?></td>
 			<td><?php echo $message['modified']; ?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'messages', 'action' => 'view', $message['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'messages', 'action' => 'edit', $message['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'messages', 'action' => 'delete', $message['id']), array('confirm' => __('Are you sure you want to delete # %s?', $message['id']))); ?>
-			</td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Message'), array('controller' => 'messages', 'action' => 'add')); ?> </li>
-		</ul>
-	</div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#sendMessage').click(function() {
+        var messageContent = $('#messageContent').val();
+        if (!messageContent.trim()) {
+            alert('Message cannot be empty.');
+            return;
+        }
+        var data = {
+            Message: {
+                content: messageContent,
+                conversation_id: <?php echo json_encode($conversation['Conversation']['id']); ?>,
+                user_id: <?php echo json_encode($currentUser['id']); ?>
+            }
+        };
+
+        $.ajax({
+            url: '/curriculum-app/messages/add',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    var newRow = $('<tr>').append(
+                        $('<td>').text(data.Message.user_id),
+                        $('<td>').text(data.Message.conversation_id),
+                        $('<td>').text(data.Message.content),
+                    );
+                    $('table').prepend(newRow);
+                    $('#messageContent').val('');
+                    console.log('Message added successfully.');
+                } else {
+                    alert('Failed to add message: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+
