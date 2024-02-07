@@ -9,16 +9,30 @@
 	<h3><?php echo __('Related Messages'); ?></h3>
 	<?php if (!empty($conversation['Message'])): ?>
 	<table cellpadding = "0" cellspacing = "0">
-	<?php foreach ($conversation['Message'] as $message): ?>
+		<?php foreach ($conversation['Message'] as $message): ?>
 		<tr>
-			<td><?php echo $message['id']; ?></td>
-			<td><?php echo $message['user_id']; ?></td>
-			<td><?php echo $message['conversation_id']; ?></td>
-			<td><?php echo $message['content']; ?></td>
-			<td><?php echo $message['created']; ?></td>
-			<td><?php echo $message['modified']; ?></td>
+			<td colspan="2" class="message-table">
+				<div class="message-row">
+					<div class="message-content">
+						<div class="user-image-placeholder"></div>
+					</div>
+					<div class="message-details">
+						<span class="message-text"><?php echo h($message['content']); ?></span>
+						<div class="created-date"><?php echo date('Y/m/d H:i', strtotime($message['created'])); ?></div>
+					</div>
+					<div class="message-actions">
+					<?php echo $this->Html->link(__('Delete'), '#', array(
+						'class' => 'delete-message',
+						'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['id']]),
+						'data-id' => $message['id'],
+						'data-conversation-id' => $message['conversation_id'],
+					));
+					?>
+                	</div>
+				</div>
+			</td>
 		</tr>
-	<?php endforeach; ?>
+		<?php endforeach; ?>
 	</table>
 <?php endif; ?>
 </div>
@@ -45,18 +59,30 @@ $(document).ready(function() {
             data: data,
             dataType: 'json',
             success: function(response) {
-                if (response.status === 'success') {
-                    var newRow = $('<tr>').append(
-                        $('<td>').text(data.Message.user_id),
-                        $('<td>').text(data.Message.conversation_id),
-                        $('<td>').text(data.Message.content),
-                    );
-                    $('table').prepend(newRow);
-                    $('#messageContent').val('');
-                    console.log('Message added successfully.');
-                } else {
-                    alert('Failed to add message: ' + response.message);
-                }
+                var messageRow = '<tr>' +
+                    '<td colspan="2" class="message-table">' +
+                    '<div class="message-row">' +
+                    '<div class="message-content">' +
+                    '<div class="user-image-placeholder"></div>' +
+                    '</div>' +
+                    '<div class="message-details">' +
+                    '<span class="message-text">' + response.Message.content + '</span>' +
+                    '<div class="created-date">' + new Date().toLocaleString() + '</div>' +
+                    '</div>' +
+                    '<div class="message-actions">' +
+                    '<a href="#" class="delete-message" ' +
+                    'data-url="<?php echo $this->Html->url(['controller' => 'messages', 'action' => 'delete']); ?>/' + response.Message.id + '"' +
+                    'data-id="' + response.Message.id + '"' +
+                    'data-conversation-id="' + response.Message.conversation_id + '">' +
+                    '<?php echo __('Delete'); ?>' +
+                    '</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
+                $('table tbody').prepend(messageRow);
+                $('#messageContent').val('');
+                console.log('Message added successfully.');
             },
             error: function(xhr, status, error) {
                 alert("Error: " + xhr.responseText);
@@ -64,6 +90,7 @@ $(document).ready(function() {
         });
     });
 });
+
 </script>
 
 

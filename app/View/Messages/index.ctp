@@ -25,14 +25,13 @@
 						<div class="created-date"><?php echo date('Y/m/d H:i', strtotime($message['Message']['created'])); ?></div>
 					</div>
 					<div class="message-actions">
-						<!-- TODO: conversation_idもデータとして渡すようにする -->
-					<?php echo $this->Html->link(__('Delete'), '#', array(
-						'class' => 'delete-message',
-						'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
-						'data-id' => $message['Message']['id'],
-						'data-conversation-id' => $message['Message']['conversation_id'],
-					));
-					?>
+						<?php echo $this->Html->link(__('Delete'), '#', array(
+							'class' => 'delete-message',
+							'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
+							'data-id' => $message['Message']['id'],
+							'data-conversation-id' => $message['Message']['conversation_id'],
+						));
+						?>
                 	</div>
 				</div>
 			</td>

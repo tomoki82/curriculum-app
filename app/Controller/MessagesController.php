@@ -71,6 +71,7 @@ class MessagesController extends AppController {
 	public function add() {
 		// ajaxでのリクエストの場合の処理
 		if ($this->request->is('ajax')) {
+			// TODO: ユーザー諸々のデータを含めたレスポンスを返す
 			$this->log($this->request->data, 'debug');
 			$this->autoRender = false;
 			$this->Message->create();
@@ -82,7 +83,7 @@ class MessagesController extends AppController {
 			}
 			$this->response->type('application/json');
 			$this->response->body(json_encode($response));
-			return $this->response; 
+			return $this->response;
 		}
 		if ($this->request->is('post')) {
 			$currentUserId = $this->Auth->user('id');
