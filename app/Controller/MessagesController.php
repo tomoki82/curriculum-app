@@ -19,7 +19,7 @@ class MessagesController extends AppController {
 	public $components = array('Paginator', 'Session', 'Flash');
 
 	public function isAuthorized($user) {
-		if ($this->action === 'add') {
+		if ($this->action === 'add' || $this->action === 'index') {
 			return true;
 		}
 
@@ -40,6 +40,11 @@ class MessagesController extends AppController {
  */
 	public function index() {
 		$this->Message->recursive = 0;
+		$this->Paginator->settings = array(
+			'order' => array('Message.created' => 'desc'),
+			'group' => 'Message.conversation_id',
+			'limit' => 10,
+		);
 		$this->set('messages', $this->Paginator->paginate());
 	}
 
@@ -64,10 +69,27 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function add() {
+		// ajaxでのリクエストの場合の処理
+		if ($this->request->is('ajax')) {
+			$this->log($this->request->data, 'debug');
+			$this->autoRender = false;
+			$this->Message->create();
+			$this->request->data['Message']['user_id'] = $this->Auth->user('id');
+			if ($this->Message->save($this->request->data)) {
+				$response = ['status' => 'success', 'message' => 'The message has been saved.'];
+			} else {
+				$response = ['status' => 'error', 'message' => 'The message could not be saved. Please, try again.'];
+			}
+			$this->response->type('application/json');
+			$this->response->body(json_encode($response));
+			return $this->response; 
+		}
 		if ($this->request->is('post')) {
 			$currentUserId = $this->Auth->user('id');
     		$this->request->data['Message']['user_id'] = $currentUserId;
-			if (empty($this->request->data['conversation_id'])) {
+			if (!empty($this->request->data['Message']['conversation_id'])) {
+				$conversationId = $this->request->data['Message']['conversation_id'];
+			} else {
 				$conversationData = array(
 					'Conversation' => array(
 						'user_id' => $currentUserId,
@@ -77,8 +99,6 @@ class MessagesController extends AppController {
 				if ($this->Conversation->save($conversationData)) {
 					$conversationId = $this->Conversation->id;
 				}
-			} else {
-				$conversationId = $this->request->data['conversation_id'];
 			}
 			$this->request->data['Message']['conversation_id'] = $conversationId;
 
@@ -132,15 +152,22 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Invalid message'));
+		debug($this->request->data);
+		$this->request->allowMethod(['post', 'delete']);
+		$message = $this->Message->findById($id);
+		debug($message);
+		if ($message) {
+			if ($this->Message->delete($id) && $this->Message->Conversation->deleteAll(['conversation.id' => $message['Message']['conversation_id']])) {
+				$this->set('response', ['status' => 'success']);
+				return $this->redirect(['action' => 'index']);
+				$this->autoRender = false;
+			} else {
+				$this->set('response', ['status' => 'error']);
+				$this->autoRender = false;
+            	return $this->redirect(['action' => 'index']);
+			}
 		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->Message->delete($id)) {
-			$this->Flash->success(__('The message has been deleted.'));
-		} else {
-			$this->Flash->error(__('The message could not be deleted. Please, try again.'));
-		}
-		return $this->redirect(array('action' => 'index'));
+		$this->set('_serialize', ['response']);
 	}
 }
+

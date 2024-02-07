@@ -13,12 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         const emailRegex = /^[a-zA-Z0-9_+-]+(\.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
-        if (!email || !email.match(emailRegex) {
+        if (!email || !email.match(emailRegex)) {
             alert("Please provide a valid email address.");
             hasErrors = true;
         }
 
-
-        if (hasErrors) event.preventDefault(); 
+        if (hasErrors) event.preventDefault();
     });
 });

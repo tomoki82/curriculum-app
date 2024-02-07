@@ -1,4 +1,4 @@
-<div class="users view">
+<div class="users view" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px;">
 <h2><?php echo __('User'); ?></h2>
 	<dl>
 		<dt><?php echo __('Name'); ?></dt>

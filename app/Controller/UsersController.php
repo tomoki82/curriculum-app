@@ -26,7 +26,7 @@ class UsersController extends AppController {
 			if ($this->Auth->login()) {
 				$this->User->id = $this->Auth->user('id');
 				$this->User->saveField('last_login_time', date('Y-m-d H:i:s'));
-				$this->redirect($this->Auth->redirect());
+				$this->redirect('/');
 			} else {
 				$this->Session->setFlash(__('Invalid email or password, try again'));
 			}
@@ -129,5 +129,21 @@ class UsersController extends AppController {
 			$this->Flash->error(__('The user could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+
+	public function search() {
+		$this->autoRender = false;
+		if ($this->request->is('get')) {
+			$query = $this->request->query('term');
+			$users = $this->User->find('all', array(
+				'conditions' => array('User.name LIKE' => '%' . $query . '%'),
+				'fields' => array('id', 'name')
+			));
+			$results = array();
+			foreach ($users as $user) {
+				$results[] = array('id' => $user['User']['id'], 'text' => $user['User']['name']);
+			}
+			echo json_encode($results);
+		}
 	}
 }
