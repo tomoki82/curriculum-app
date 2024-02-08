@@ -17,9 +17,17 @@
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 ?>
+<?php echo $this->Html->script('validation'); ?>
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<?php echo $this->Html->script('message_delete'); ?>
+	<?php echo $this->Html->script('load_more_messages'); ?>
 	<?php echo $this->Html->charset(); ?>
 	<title>
 		<?php echo $cakeDescription ?>:
@@ -36,9 +44,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	?>
 </head>
 <body>
-	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'https://cakephp.org'); ?></h1>
+	<div id="header">
+		<div class="main-menu">
+			<?php if ($this->Session->read('Auth.User')): ?>
+				<?php echo $this->Html->link(
+					h($this->Session->read('Auth.User.name')),
+					['controller' => 'users', 'action' => 'view', $this->Session->read('Auth.User.id')]
+				); ?>
+				<?php echo $this->Html->link('Logout', ['controller' => 'users', 'action' => 'logout']); ?>
+			<?php endif; ?>
 		</div>
 		<div id="content">
 
@@ -46,18 +60,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 			<?php echo $this->fetch('content'); ?>
 		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'https://cakephp.org/',
-					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
-				);
-			?>
-			<p>
-				<?php echo $cakeVersion; ?>
-			</p>
-		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+</div>
+
 </body>
 </html>

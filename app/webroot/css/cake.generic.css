@@ -40,6 +40,10 @@ a:hover {
 a img {
 	border:none;
 }
+a button {
+	color: #000;
+}
+
 h1, h2, h3, h4 {
 	font-weight: normal;
 	margin-bottom:0.5em;
@@ -119,8 +123,7 @@ div.form,
 div.index,
 div.view {
 	float:right;
-	width:76%;
-	border-left:1px solid #666;
+	width: auto;
 	padding:10px 2%;
 }
 div.actions {
@@ -192,8 +195,8 @@ table td.actions a {
 
 /** Paging **/
 .paging {
-	background:#fff;
-	color: #ccc;
+	background: #ccc;
+	color: #F0F0F0;
 	margin-top: 1em;
 	clear:both;
 }
@@ -202,7 +205,6 @@ table td.actions a {
 .paging a {
 	text-decoration: none;
 	padding: 5px 8px;
-	display: inline-block
 }
 .paging > span {
 	display: inline-block;
@@ -351,6 +353,9 @@ input[type=radio] {
 .radio label {
 	margin: 0 0 6px 20px;
 	line-height: 26px;
+}
+gender-checkboxes div {
+	display: inline!important;
 }
 input[type=submit] {
 	display: inline;
@@ -556,6 +561,19 @@ input[type=submit]:active,
 	box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 	border-color: #aaa;
 	text-decoration: none;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #acacac;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.new-message {
+	color: black!important;
+    font-weight: bold;
 }
 
 /** Related **/
