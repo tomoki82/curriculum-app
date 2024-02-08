@@ -1,5 +1,5 @@
-<div class="users form">
-<?php echo $this->Form->create('User'); ?>
+<div class="users form" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px;">
+<?php echo $this->Form->create('User', ['type' => 'file']); ?>
 	<fieldset>
 		<legend><?php echo __('Edit User'); ?></legend>
 	<?php
@@ -9,29 +9,18 @@
 		echo $this->Form->input('password', ['type' => 'password', 'value' => '']);
 		echo $this->Form->input('birthdate', ['type' => 'text', 'id' => 'birthdate', 'label' => 'Birthdate']);
 		echo $this->Form->input('gender', [
+			'required' => true,
 			'type' => 'radio',
 			'multiple' => 'checkbox',
 			'options' => [1 => 'Female', 2 => 'Male', 3 => 'Other'],
 			'label' => 'Gender',
 			'class' => 'gender-checkboxes'
 		]);
-		echo $this->Form->input('hobby');
-		echo $this->Form->input('profile_img');
+		echo $this->Form->input('hobby', ['required' => true]);
+		echo $this->Form->input('profile_img', ['type' => 'file']);
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('User.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('User.id')))); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Conversations'), array('controller' => 'conversations', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Conversation'), array('controller' => 'conversations', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Messages'), array('controller' => 'messages', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Message'), array('controller' => 'messages', 'action' => 'add')); ?> </li>
-	</ul>
 </div>
 
 <script>

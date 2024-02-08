@@ -32,7 +32,14 @@
 							'data-conversation-id' => $message['Message']['conversation_id'],
 						));
 						?>
-                	</div>
+						<?php echo $this->Html->link(__('Reply'), array(
+							'class' => 'reply-message',
+    						'controller' => 'conversations',
+   							'action' => 'view',
+    						$message['Message']['conversation_id']
+							), array('class' => 'reply-message'));
+						?>
+					</div>
 				</div>
 			</td>
 		</tr>
@@ -77,6 +84,7 @@
     flex-direction: column;
 	flex-grow: 1;
 	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
 }
 
 .message-text {
@@ -99,6 +107,23 @@
 	padding: 5px;
 	border-left: 1px solid #ccc;
 	background-color: #ccc;
+}
+
+.delete-message {
+	color: #fff;
+	background-color: #f00;
+	padding: 5px;
+	border-radius: 5px;
+	text-decoration: none;
+	margin-bottom: 5px;
+}
+
+.reply-message {
+	color: #fff;
+	background-color: #00f;
+	padding: 5px;
+	border-radius: 5px;
+	text-decoration: none;
 }
 
 .load-more {
