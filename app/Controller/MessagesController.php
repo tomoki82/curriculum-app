@@ -123,15 +123,8 @@ class MessagesController extends AppController {
 		if (!$this->Message->exists()) {
 			throw new NotFoundException(__('Invalid message'));
 		}
-		$response = ['status' => 'error', 'message' => 'The message could not be deleted. Please, try again.'];
-		if ($this->request->is('ajax')) {
-			// When using ajax, delete the message itself.
-			if ($this->Message->delete()) {
-				$response = ['status' => 'success', 'message' => 'The message has been deleted.'];
-			}
-			$this->autoRender = false;
-			return json_encode($response);
-		} else {
+		$deleteConversation = $this->request->data('delete_conversation') == 'true' || $this->request->data('delete_conversation') == true;
+		if ($deleteConversation) {
 			$message = $this->Message->findById($id);
 			$conversationId = $message['Message']['conversation_id'];
 			if ($this->Message->delete() && $this->Message->Conversation->delete($conversationId)) {
@@ -140,6 +133,12 @@ class MessagesController extends AppController {
 				$this->Flash->error(__('The message could not be deleted. Please, try again.'));
 			}
 			return $this->redirect(['action' => 'index']);
+		} else {
+			if ($this->Message->delete()) {
+				$response = ['status' => 'success', 'message' => 'The message has been deleted.'];
+			}
+			$this->autoRender = false;
+			return json_encode($response);
 		}
 	}
 }

@@ -33,6 +33,7 @@
 								'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
 								'data-id' => $message['Message']['id'],
 								'data-conversation-id' => $message['Message']['conversation_id'],
+								'data-delete-conversation' => true,
 							));
 						?>
 						<?php

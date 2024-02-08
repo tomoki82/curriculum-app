@@ -4,6 +4,7 @@ $(document).ready(function() {
         var url = $(this).data('url');
         var messageId = $(this).data('id')
         var conversationId = $(this).data('conversation-id');
+        var deleteConversation = $(this).data('delete-conversation');
         var rowToDelete = $(this).closest('tr');
         console.log($(this).data());
 
@@ -14,6 +15,7 @@ $(document).ready(function() {
                 data: {
                     id: messageId,
                     conversation_id: conversationId,
+                    delete_conversation: deleteConversation,
                     _method: 'DELETE'
                 },
                 success: function(result) {
