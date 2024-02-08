@@ -102,27 +102,27 @@ class User extends AppModel {
 
 	public function beforeValidate($options = array()) {
 		parent::beforeValidate($options);
+
 		if (!empty($this->id) || !empty($this->data[$this->alias]['id'])) {
-			$this->validate['birthdate'] = array_merge($this->validate['birthdate'], [
-				'notBlank' => [
-					'rule' => 'notBlank',
-					'message' => 'Birthdate is required on update.'
-				]
-			]);
-			$this->validate['gender'] = array_merge($this->validate['gender'], [
-				'notBlank' => [
-					'rule' => 'notBlank',
-					'message' => 'Gender is required on update.'
-				]
-			]);
-			$this->validate['hobby'] = array_merge($this->validate['hobby'], [
-				'notBlank' => [
-					'rule' => 'notBlank',
-					'message' => 'Hobby is required on update.'
-				]
-			]);
+			$this->validate['birthdate']['notBlank'] = [
+				'rule' => 'notBlank',
+				'message' => 'Birthdate is required on update.'
+			];
+			if (!isset($this->validate['gender'])) {
+				$this->validate['gender'] = [];
+			}
+			$this->validate['gender']['notBlank'] = [
+				'rule' => 'notBlank',
+				'message' => 'Gender is required on update.'
+			];
+			if (!isset($this->validate['hobby'])) {
+				$this->validate['hobby'] = [];
+			}
+			$this->validate['hobby']['notBlank'] = [
+				'rule' => 'notBlank',
+				'message' => 'Hobby is required on update.'
+			];
 		}
 		return true;
 	}
-	
 }

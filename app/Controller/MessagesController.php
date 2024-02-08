@@ -39,29 +39,16 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->Message->recursive = 0;
+		$this->Message->recursive = -1;
 		$this->Paginator->settings = array(
 			'order' => array('Message.created' => 'desc'),
 			'group' => 'Message.conversation_id',
 			'limit' => 10,
+			'contain' => ['User'],
 		);
-		$this->set('messages', $this->Paginator->paginate());
+		$this->set('messages', $this->Paginator->paginate('Message'));
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Invalid message'));
-		}
-		$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
-		$this->set('message', $this->Message->find('first', $options));
-	}
 
 /**
  * add method
@@ -69,15 +56,21 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function add() {
-		// ajaxでのリクエストの場合の処理
 		if ($this->request->is('ajax')) {
-			// TODO: ユーザー諸々のデータを含めたレスポンスを返す
-			$this->log($this->request->data, 'debug');
 			$this->autoRender = false;
 			$this->Message->create();
 			$this->request->data['Message']['user_id'] = $this->Auth->user('id');
 			if ($this->Message->save($this->request->data)) {
-				$response = ['status' => 'success', 'message' => 'The message has been saved.'];
+				$messageId = $this->Message->id;
+				$message = $this->Message->findById($messageId);
+				$response = [
+					'status' => 'success',
+					'Message' => [
+						'id' => $messageId,
+						'content' => $message['Message']['content'],
+						'conversation_id' => $message['Message']['conversation_id']
+					]
+				];
 			} else {
 				$response = ['status' => 'error', 'message' => 'The message could not be saved. Please, try again.'];
 			}
@@ -117,34 +110,6 @@ class MessagesController extends AppController {
 		$this->set(compact('users', 'conversations'));
 	}
 
-
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Invalid message'));
-		}
-		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Message->save($this->request->data)) {
-				$this->Flash->success(__('The message has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Flash->error(__('The message could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
-			$this->request->data = $this->Message->find('first', $options);
-		}
-		$users = $this->Message->User->find('list');
-		$conversations = $this->Message->Conversation->find('list');
-		$this->set(compact('users', 'conversations'));
-	}
-
 /**
  * delete method
  *
@@ -153,22 +118,29 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		debug($this->request->data);
-		$this->request->allowMethod(['post', 'delete']);
-		$message = $this->Message->findById($id);
-		debug($message);
-		if ($message) {
-			if ($this->Message->delete($id) && $this->Message->Conversation->deleteAll(['conversation.id' => $message['Message']['conversation_id']])) {
-				$this->set('response', ['status' => 'success']);
-				return $this->redirect(['action' => 'index']);
-				$this->autoRender = false;
-			} else {
-				$this->set('response', ['status' => 'error']);
-				$this->autoRender = false;
-            	return $this->redirect(['action' => 'index']);
-			}
+		$this->request->allowMethod(['post', 'delete', 'ajax']);
+		$this->Message->id = $id;
+		if (!$this->Message->exists()) {
+			throw new NotFoundException(__('Invalid message'));
 		}
-		$this->set('_serialize', ['response']);
+		$response = ['status' => 'error', 'message' => 'The message could not be deleted. Please, try again.'];
+		if ($this->request->is('ajax')) {
+			// When using ajax, delete the message itself.
+			if ($this->Message->delete()) {
+				$response = ['status' => 'success', 'message' => 'The message has been deleted.'];
+			}
+			$this->autoRender = false;
+			return json_encode($response);
+		} else {
+			$message = $this->Message->findById($id);
+			$conversationId = $message['Message']['conversation_id'];
+			if ($this->Message->delete() && $this->Message->Conversation->delete($conversationId)) {
+				$this->Flash->success(__('The message and the conversation have been deleted.'));
+			} else {
+				$this->Flash->error(__('The message could not be deleted. Please, try again.'));
+			}
+			return $this->redirect(['action' => 'index']);
+		}
 	}
 }
 

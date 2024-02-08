@@ -38,16 +38,6 @@ class UsersController extends AppController {
 	}
 
 /**
- * index method
- *
- * @return void
- */
-	public function index() {
-		$this->User->recursive = 0;
-		$this->set('users', $this->Paginator->paginate());
-	}
-
-/**
  * view method
  *
  * @throws NotFoundException
@@ -100,15 +90,20 @@ public function edit($id = null) {
             unset($this->request->data['User']['password']);
         }
         if (!empty($this->request->data['User']['profile_img']['tmp_name']) && is_uploaded_file($this->request->data['User']['profile_img']['tmp_name'])) {
-            $fileContent = file_get_contents($this->request->data['User']['profile_img']['tmp_name']);
-            $this->request->data['User']['profile_img'] = $fileContent;
+            $fileName = time() . '_' . $this->request->data['User']['profile_img']['name'];
+            $filePath = WWW_ROOT . 'img' . DS . 'profile_imgs' . DS . $fileName;
+            if (move_uploaded_file($this->request->data['User']['profile_img']['tmp_name'], $filePath)) {
+                $this->request->data['User']['profile_img'] = 'profile_imgs/' . $fileName;
+            } else {
+                unset($this->request->data['User']['profile_img']);
+            }
         } else {
             unset($this->request->data['User']['profile_img']);
         }
 
         if ($this->User->save($this->request->data)) {
             $this->Flash->success(__('The user has been saved.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['action' => 'view', $id]);
         } else {
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
@@ -147,11 +142,13 @@ public function edit($id = null) {
 			$query = $this->request->query('term');
 			$users = $this->User->find('all', array(
 				'conditions' => array('User.name LIKE' => '%' . $query . '%'),
-				'fields' => array('id', 'name')
+				'fields' => array('id', 'name', 'profile_img')
 			));
 			$results = array();
+			// usersの情報をログに出力
+			CakeLog::write('debug', print_r($users, true));
 			foreach ($users as $user) {
-				$results[] = array('id' => $user['User']['id'], 'text' => $user['User']['name']);
+				$results[] = array('id' => $user['User']['id'], 'text' => $user['User']['name'], 'profile_img' => $user['User']['profile_img']);
 			}
 			echo json_encode($results);
 		}
@@ -167,17 +164,19 @@ public function edit($id = null) {
 		$this->autoRender = false;
 		$this->layout = false;
 		$userData = $this->User->findById($userId);
-		$profileImg = $userData['User']['profile_img'];
-		if (empty($profileImg)) {
-			// Default icon for users who do not have a user icon
-			if ($this->User->exists($userId)) {
+		if (empty($userData['User']['profile_img'])) {
 			header('Content-type: image/jpeg');
-			readfile('img/default.png');
-			exit;
+			readfile(WWW_ROOT . 'img/default.png');
+		} else {
+			$filePath = WWW_ROOT . $userData['User']['profile_img'];
+			if (file_exists($filePath)) {
+				header('Content-type: image/jpeg');
+				readfile($filePath);
+			} else {
+				header('Content-type: image/jpeg');
+				readfile(WWW_ROOT . 'img/default.png');
 			}
-			throw new NotFoundException(Configure::read('404_message'));
 		}
-		header('Content-type: image/jpeg');
-		echo $profileImg['Users']['profile_img'];
+		exit;
 	}
 }

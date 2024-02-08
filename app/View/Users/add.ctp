@@ -1,4 +1,4 @@
-<div class="users form">
+<div class="users form" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px;">
 <?php
     if (!empty($this->validationErrors['User'])) {
         echo '<div class="error-message">';

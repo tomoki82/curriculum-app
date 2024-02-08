@@ -13,6 +13,17 @@
 
 <script>
 $(document).ready(function() {
+    function formatUser(user) {
+        console.log(user.profile_img);
+        if (!user.id) {
+            return user.text;
+        }
+        var $user = $(
+            '<span><img src="/img/profile_imgs/1707377458_8378.jpg_wh860.jpg" class="profile-img" /> ' + user.text + '</span>'
+        );
+        return $user;
+    }
+
     $('#MessageUserId').select2({
         width: '15%',
         placeholder: 'Search for a recipient',
@@ -23,12 +34,17 @@ $(document).ready(function() {
             processResults: function(data) {
                 return {
                     results: data.map(function(item) {
-                        return { id: item.id, text: item.text };
+                        return {
+                            id: item.id,
+                            text: item.text,
+                            profile_img: item.profile_img,
+                        };
                     })
                 };
             },
             cache: true
-        }
+        },
+        templateResult: formatUser
     });
 });
 </script>
@@ -53,4 +69,14 @@ $(document).ready(function() {
     background-color: #eaeaea;
 	color: black;
 }
+
+.select2-result-user {
+    display: flex;
+    align-items: center;
+}
+
+.select2-result-user__avatar img {
+    margin-right: 1px;
+}
+
 </style>

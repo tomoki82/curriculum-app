@@ -1,4 +1,4 @@
-<div class="messages index">
+<div class="messages index" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px;">
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<h2><?php echo __('Message List'); ?></h2>
 		<div>
@@ -18,25 +18,29 @@
 			<td colspan="2" class="message-table">
 				<div class="message-row">
 					<div class="message-content">
-						<div class="user-image-placeholder"></div>
+						<?php
+							echo $this->Html->image('/img/'.$message['User']['profile_img'], ['class' => 'profile-img']);
+						?>
 					</div>
 					<div class="message-details">
 						<span class="message-text"><?php echo h($message['Message']['content']); ?></span>
 						<div class="created-date"><?php echo date('Y/m/d H:i', strtotime($message['Message']['created'])); ?></div>
 					</div>
 					<div class="message-actions">
-						<?php echo $this->Html->link(__('Delete'), '#', array(
-							'class' => 'delete-message',
-							'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
-							'data-id' => $message['Message']['id'],
-							'data-conversation-id' => $message['Message']['conversation_id'],
-						));
+						<?php
+							echo $this->Html->link(__('Delete'), '#', array(
+								'class' => 'delete-message',
+								'data-url' => $this->Html->url(['controller' => 'messages', 'action' => 'delete', $message['Message']['id']]),
+								'data-id' => $message['Message']['id'],
+								'data-conversation-id' => $message['Message']['conversation_id'],
+							));
 						?>
-						<?php echo $this->Html->link(__('Reply'), array(
-							'class' => 'reply-message',
-    						'controller' => 'conversations',
-   							'action' => 'view',
-    						$message['Message']['conversation_id']
+						<?php
+							echo $this->Html->link(__('Reply'), array(
+								'class' => 'reply-message',
+								'controller' => 'conversations',
+								'action' => 'view',
+								$message['Message']['conversation_id']
 							), array('class' => 'reply-message'));
 						?>
 					</div>
@@ -55,6 +59,11 @@
 </div>
 
 <style>
+
+.profile-img {
+		width: 100px;
+		height: 100px;
+}
 
 .message-table {
 	border: none;
