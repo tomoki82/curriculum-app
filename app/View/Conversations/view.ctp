@@ -78,7 +78,7 @@ $(document).ready(function() {
 					'<td colspan="2" class="message-table">' +
 					'<div class="message-row">' +
 					'<div class="message-content">' +
-					'<?php echo $this->Html->image('/img/'.$message['User']['profile_img'], ['class' => 'profile-img']); ?>' +
+					'<img src="/curriculum-app/img/' + response.Message.profile_img + '" class="profile-img" />' +
 					'</div>' +
 					'<div class="message-details">' +
 					'<span class="message-text">' + response.Message.content + '</span>' +

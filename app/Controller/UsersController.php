@@ -60,6 +60,7 @@ class UsersController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->User->create();
+			$this->request->data['User']['profile_img'] = 'default.png';
 			if ($this->User->save($this->request->data)) {
 				return $this->redirect(array('controller' => 'users', 'action' => 'thankyou'));
 			} else {
@@ -152,31 +153,5 @@ public function edit($id = null) {
 			}
 			echo json_encode($results);
 		}
-	}
-
- /**
- * User Icon Display
- *
- * @param int $userId
- * @return
- */
-	public function showUsersIcon($userId) {
-		$this->autoRender = false;
-		$this->layout = false;
-		$userData = $this->User->findById($userId);
-		if (empty($userData['User']['profile_img'])) {
-			header('Content-type: image/jpeg');
-			readfile(WWW_ROOT . 'img/default.png');
-		} else {
-			$filePath = WWW_ROOT . $userData['User']['profile_img'];
-			if (file_exists($filePath)) {
-				header('Content-type: image/jpeg');
-				readfile($filePath);
-			} else {
-				header('Content-type: image/jpeg');
-				readfile(WWW_ROOT . 'img/default.png');
-			}
-		}
-		exit;
 	}
 }

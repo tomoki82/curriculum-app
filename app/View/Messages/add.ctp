@@ -19,7 +19,7 @@ $(document).ready(function() {
             return user.text;
         }
         var $user = $(
-            '<span><img src="/img/profile_imgs/1707377458_8378.jpg_wh860.jpg" class="profile-img" /> ' + user.text + '</span>'
+            '<span><img src="/curriculum-app/img/' + user.profile_img + '" class="profile-img" /> ' + user.text + '</span>'
         );
         return $user;
     }
@@ -79,4 +79,11 @@ $(document).ready(function() {
     margin-right: 1px;
 }
 
+.profile-img {
+		width: 50px;
+		height: 50px;
+}
+.user-name {
+    padding: 5px;
+}
 </style>

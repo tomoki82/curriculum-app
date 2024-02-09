@@ -68,7 +68,8 @@ class MessagesController extends AppController {
 					'Message' => [
 						'id' => $messageId,
 						'content' => $message['Message']['content'],
-						'conversation_id' => $message['Message']['conversation_id']
+						'conversation_id' => $message['Message']['conversation_id'],
+						'profile_img' => $message['User']['profile_img'],
 					]
 				];
 			} else {
@@ -124,7 +125,7 @@ class MessagesController extends AppController {
 			throw new NotFoundException(__('Invalid message'));
 		}
 		$deleteConversation = $this->request->data('delete_conversation') == 'true' || $this->request->data('delete_conversation') == true;
-		if ($deleteConversation) {
+		if (isset($deleteConversation) && $deleteConversation) {
 			$message = $this->Message->findById($id);
 			$conversationId = $message['Message']['conversation_id'];
 			if ($this->Message->delete() && $this->Message->Conversation->delete($conversationId)) {
