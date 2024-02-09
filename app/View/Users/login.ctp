@@ -14,28 +14,33 @@
 </div>
 
 <style>
-    .users form {
-        color: black;
-        background-color: #ccc;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
+.users form {
+    color: black;
+    background-color: #ccc;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
     }
-    /* ログインボタンの下に来るようにしたい */
-    .create_user {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 10px;
-    border: none;
+
+.create_user {
+    background: linear-gradient(to top, rgb(118, 191, 107), rgb(59, 130, 48));
+    border: 1px solid rgb(45, 99, 36);
     border-radius: 4px;
+    box-shadow: rgba(255, 255, 255, 0.3) 0px 1px 0px inset, rgba(0, 0, 0, 0.2) 0px 1px 1px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12.84px;
+    font-weight: 400;
+    height: 14px;
+    line-height: normal;
+    margin: 0;
+    padding: 7px 7px;
     text-align: center;
     text-decoration: none;
-    display: inline;
-    font-size: 100%;
-    cursor: pointer;
-    width: auto;
-    max-width: 64px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px;
+    user-select: none;
+    width: 64px;
 }
-
 </style>
